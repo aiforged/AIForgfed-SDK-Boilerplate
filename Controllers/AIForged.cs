@@ -253,7 +253,7 @@ namespace AIForged_Integration_Boilerplate.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteDoc(int docId)
+        public async Task<IActionResult> DeleteDoc(int docId, bool deleteRecursive)
         {
             try
             {
@@ -262,7 +262,7 @@ namespace AIForged_Integration_Boilerplate.Controllers
                     return BadRequest("Invalid document ID.");
                 }
 
-                var response = await _context.DocumentClient.DeleteAsync(docId);
+                var response = await _context.DocumentClient.DeleteAsync(docId, deleteRecursive,false);
                 return Ok($"Document {docId} deleted successfully.");
             }
             catch (Exception ex)
