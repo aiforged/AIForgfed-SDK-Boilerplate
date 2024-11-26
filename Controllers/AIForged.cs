@@ -247,6 +247,49 @@ namespace AIForged_Integration_Boilerplate.Controllers
         }
 
         /// <summary>
+        /// Updates the status of a document
+        /// </summary>
+        [HttpPut("SetDocStatus")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SetDocStatus(int docId, [FromQuery] DocumentStatus status)
+        {
+            try
+            {
+                // Validate input parameters
+                if (docId <= 0)
+                {
+                    return BadRequest("Invalid document ID.");
+                }
+
+                // Get the current document
+                var response = await _context.DocumentClient.GetDocumentAsync(docId);
+                if (response?.Result == null)
+                {
+                    return BadRequest($"Document with ID {docId} not found.");
+                }
+
+                // Update the document status
+                DocumentViewModel doc = response.Result;
+                doc.Status = status;
+
+                // Perform the update
+                var updateResponse = await _context.DocumentClient.UpdateAsync(doc);
+                if (updateResponse?.StatusCode != 200)
+                {
+                    return StatusCode(500, $"Failed to update document status. Status code: {updateResponse?.StatusCode}");
+                }
+
+                return Ok($"Document {docId} status updated to {status} successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"{GenericErrorMessage} Details: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Deletes a document by ID
         /// </summary>
         [HttpDelete("DeleteDoc")]

@@ -110,6 +110,9 @@ dotnet run
 
 When running in development mode, Swagger UI is available at `/swagger` endpoint, providing interactive API documentation.
 
+## SDK API Endpoints
+All Endpoints can be found at: https://portal.aiforged.com/swagger/index.html
+
 ## Health Checks
 
 The application performs an authentication check on startup to ensure:
